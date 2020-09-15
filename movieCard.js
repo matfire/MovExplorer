@@ -1,3 +1,5 @@
+import db from "./dexie.js";
+
 class MovieCard extends HTMLElement {
     constructor() {
         super()
@@ -14,15 +16,29 @@ class MovieCard extends HTMLElement {
     }
     set fileName(name) {
         const correctButton = this.shadowRoot.querySelector("button.search-button")
-        correctButton.addEventListener("click", (e) => {
+        correctButton.addEventListener("click", async(e) => {
+            const data = await db.movies.get(name)
+            console.log(data)
             $("#searchResult").text("")
             $("#searchQuery").text("")
             $("#nameFile").text(name)
+            $("#tmdbId").text(data.data.id)
             $("#searchModal").modal()
         })
     }
-
+    get fileName() {
+        return this.fileName
+    }
+    get movie() {
+        return this.movie
+    }
     set movie(movie) {
+        this.shadowRoot.innerHTML = ""
+        const linkElem = document.createElement("link")
+        linkElem.setAttribute('rel', 'stylesheet');
+        linkElem.setAttribute('href', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+        this.shadowRoot.appendChild(linkElem)
+
         const col = document.createElement("div")
         col.classList.add("col-sm", "mt-3", "mb-2")
         const card = document.createElement("div")
@@ -63,7 +79,21 @@ class MovieCard extends HTMLElement {
         // </div>
         // `
     }
-
+    static get observedAttributes() {
+        return ["movie", "fileName"]
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        console.log("updating card with", newValue)
+        switch (name) {
+            case "movie":
+                this.movie = newValue
+                break;
+        
+            default:
+                break;
+        }
+        this.displayVal.innerText = this.value;
+    }
     
 }
 

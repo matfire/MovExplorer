@@ -7,8 +7,9 @@ if ("serviceWorker" in navigator) {
 }
 
 const grid = document.getElementById("movieGrid")
-
-
+const resultDiv = document.getElementById("searchResult")
+const selectedFilename = document.getElementById("nameFile")
+const selectedId = document.getElementById("tmdbId")
 document.getElementById("chooseFileButton").onclick = async () => {
     const opts = { type: "open-directory" }
     const fileHandle = await window.chooseFileSystemEntries(opts)
@@ -34,7 +35,6 @@ document.getElementById("chooseFileButton").onclick = async () => {
 }
 
 document.getElementById("searchQuery").onkeypress = async(e) => {
-    const resultDiv = document.getElementById("searchResult")
 
 
     const query = e.target.value
@@ -49,8 +49,14 @@ document.getElementById("searchQuery").onkeypress = async(e) => {
             img.src = getPoster("w500", film.poster_path)
             img.alt = film.title
             img.id = film.id
-            img.onclick = () => {
-                
+            img.onclick = async() => {
+                const oldData = await db.movies.get(selectedFilename.innerText)
+                await db.movies.put({fileName:selectedFilename.innerText, data: film, tmId: film.id})
+                const selectedCard = $(`#${oldData.data.id}`)
+                selectedCard.movie = film
+                selectedCard.id = film.id
+                $("#searchModal").modal("hide")
+
             }
             col.appendChild(img)
             resultDiv.appendChild(col)
