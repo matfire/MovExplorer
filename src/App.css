@@ -1,0 +1,32 @@
+:root {
+  --bg: #f7f7f7;
+}
+
+header * {
+  transition-duration: 1s;
+  transition-property: background-color;
+}
+
+
+body {
+  background-color: var(--bg);
+  /* animation-duration: 4s; */
+  transition-duration: 1s;
+  transition-property: background-color;
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.missing-info {
+  font-style: italic;
+  font-size: 1.1em;
+  color: #F42B03;
+}
+
+
+.brand_icon_dark path {
+  fill:#f7f7f7;
+}
