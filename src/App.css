@@ -30,3 +30,33 @@ body {
 .brand_icon_dark path {
   fill:#f7f7f7;
 }
+
+.sidebar {
+  background-color: red;
+  height: 100vh;
+}
+
+.details__main__rating svg {
+  height: 4vh;
+}
+
+.details__main__player video {
+  height: auto;
+  width: 100%;
+}
+
+.details__actor__profile {
+  text-align: center;
+}
+
+.details__actor__profile img {
+  border-radius: 20%;
+  min-height: 13vh;
+  height: auto;
+  width: 5vw;
+}
+
+.details__actor__profile h4 {
+  font-weight: normal;
+
+}
