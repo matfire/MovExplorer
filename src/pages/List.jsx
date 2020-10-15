@@ -1,10 +1,12 @@
+import { motion } from 'framer-motion'
 import React from 'react'
 import { useContext } from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Button, CardBody, CardTitle, Col, Container, Card, Row, CardImg, CardText, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, ModalFooter } from 'reactstrap'
+import { Button, CardBody, CardTitle, Col, Container, Card, Row, CardImg, CardText, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, ModalFooter, Spinner } from 'reactstrap'
 import { MovieContext } from '../Contexts/MoviesContext'
+import { CARD_ANIMATIONS } from '../utils/animations'
 import { getPosterImage, searchMovie } from '../utils/api'
 import { insertMovie } from '../utils/db'
 
@@ -15,6 +17,7 @@ const List = () => {
     const [filmId, setFilmId] = useState("")
     const [query, setQuery] = useState("")
     const [queryResults, setQueryResults] = useState([])
+    const [loading, setLoading] = useState(true)
     const history = useHistory()
     useEffect(() => {
         const search = async () => {
@@ -56,6 +59,7 @@ const List = () => {
     useEffect(() => {
         console.log("movies have changed")
         const data = []
+        setLoading(true)
         movies.forEach((e) => {
             if (!e.id) {
                 data.push(<Col key={e.name} md="4" sm="12" lg="2" className="mb-2 mt-2">
@@ -76,25 +80,42 @@ const List = () => {
                 </Col>)
             }
             else {
-                data.push(<Col key={e.id} md="4" sm="12" lg="2" className="mb-2 mt-2">
-                    <Card  >
-                        <CardBody>
-                            <CardImg style={{ cursor: "pointer" }} src={getPosterImage(e.poster_path)} onClick={() => {
-                        history.push(`/watch/${e.id}`)
-                    }}/>
-                            <CardTitle>{e.title}</CardTitle>
-                            <CardText>Think this movie is wrong?</CardText>
-                            <Button color="primary" onClick={() => {
-                                setFilmId(e.name)
-                                setModal(!modal)
-                            }}>Correct it</Button>
-                        </CardBody>
-                    </Card>
-                </Col>)
+                data.push(
+                        <motion.div   whileHover={{ scale: 1.1 }} initial='hidden' variants={CARD_ANIMATIONS} animate='visible' key={e.id} md="4" sm="12" lg="2" className="col col-md-4 col-sm-12 col-lg-2 mb-2 mt-2">
+                            <Card  >
+                                <CardBody>
+                                    <CardImg src={getPosterImage(e.poster_path)} />
+                                    <CardTitle>{e.title}</CardTitle>
+                                    <small>{e.name}</small>
+                                    <CardText>Think this movie is wrong?</CardText>
+                                    <Button color="primary" onClick={() => {
+                                        history.push(`/watch/${e.id}`)
+                                    }}>
+                                        Watch it
+                                    </Button>
+                                    <Button color="danger" className="ml-1" onClick={() => {
+                                        setFilmId(e.name)
+                                        setModal(!modal)
+                                    }}>Correct it</Button>
+                                </CardBody>
+                            </Card>
+                    </motion.div>
+                )
             }
         })
         setFilms(data)
+        setLoading(false)
     }, [movies])
+
+    if (loading) {
+        return (
+            <Container fluid>
+                <div align="center">
+                    <Spinner size="lg" />
+                </div>
+            </Container>
+        )
+    }
     return (
         <Container fluid>
             <Modal size="lg" isOpen={modal} toggle={() => {
@@ -121,9 +142,9 @@ const List = () => {
                     }}>Close</Button>
                 </ModalFooter>
             </Modal>
-            <Row>
+            <motion.div className="row">
                 {films}
-            </Row>
+            </motion.div>
         </Container>
     )
 }

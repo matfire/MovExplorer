@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.5.3",
     "dexie": "^3.0.2",
+    "framer-motion": "^2.9.1",
     "moviedb-promise": "^3.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
