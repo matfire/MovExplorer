@@ -1,4 +1,4 @@
-import { searchMovie } from './api'
+import { getMovieDetails, searchMovie } from './api'
 import { getMovie, insertMovie } from './db'
 
 const readMoviesonDisk = async(folderHandle) => {
@@ -14,8 +14,13 @@ const readMoviesonDisk = async(folderHandle) => {
             } else {
                 const movieData = await searchMovie(entry.name)
                 if (movieData) {
-                    await insertMovie(entry.name, movieData, handle)
-                    films.push({...movieData, file: handle, name:entry.name}) 
+                    const actualData = await getMovieDetails(movieData.id)
+                    if (actualData !== undefined) {
+                        await insertMovie(entry.name, actualData, handle)
+                    } else {
+                        await insertMovie(entry.name, actualData, handle)
+                    }
+                    films.push({...actualData, file: handle, name:entry.name}) 
                 } else {
                     films.push({name: entry.name, file:handle})
                 }
