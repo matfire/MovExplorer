@@ -7,8 +7,9 @@ import { useHistory } from 'react-router-dom'
 import { Button, CardBody, CardTitle, Col, Container, Card, Row, CardImg, CardText, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, ModalFooter, Spinner } from 'reactstrap'
 import { MovieContext } from '../Contexts/MoviesContext'
 import { CARD_ANIMATIONS } from '../utils/animations'
-import { getPosterImage, searchMovie } from '../utils/api'
+import { getMovieDetails, getPosterImage, searchMovie } from '../utils/api'
 import { insertMovie } from '../utils/db'
+import { CgScreen, CgInfo } from "react-icons/cg";
 
 const List = () => {
     const { movies, setMovies } = useContext(MovieContext)
@@ -29,15 +30,17 @@ const List = () => {
                         res.forEach((e) => {
                             data.push(
                                 <Col md="4" key={e.id}>
-                                    <Card style={{ cursor: "pointer" }} onClick={() => {
+                                    <Card style={{ cursor: "pointer" }} onClick={async() => {
                                         const oldMovies = [...movies]
-                                        oldMovies.forEach((f, index) => {
+                                        oldMovies.forEach(async(f, index) => {
                                             if (f.name === filmId) {
-                                                oldMovies[index] = {...f, ...e}
+                                                const actualData = await getMovieDetails(e.id)
+                                                oldMovies[index] = {...f, ...actualData}
                                                 setMovies(oldMovies)
-                                                insertMovie(filmId, e, f.file)
-                                                setModal(!modal)
+                                                insertMovie(filmId, actualData, f.file)
+                                                setModal(false)
                                                 setQueryResults([])
+                                                setQuery("")
                                             }
                                         })
                                     }}>
@@ -87,16 +90,22 @@ const List = () => {
                                     <CardImg src={getPosterImage(e.poster_path)} />
                                     <CardTitle>{e.title}</CardTitle>
                                     <small>{e.name}</small>
-                                    <CardText>Think this movie is wrong?</CardText>
-                                    <Button color="primary" onClick={() => {
-                                        history.push(`/watch/${e.id}`)
-                                    }}>
-                                        Watch it
-                                    </Button>
-                                    <Button color="danger" className="ml-1" onClick={() => {
-                                        setFilmId(e.name)
-                                        setModal(!modal)
-                                    }}>Correct it</Button>
+                                    <CardText className="mt-2">
+                                        <Button color="primary" onClick={() => {
+                                            history.push(`/watch/${e.id}`)
+                                        }}>
+                                            <CgScreen />
+                                        </Button>
+                                        <Button className="ml-2" color="secondary" onClick={() => {
+                                            history.push(`/details/${e.id}`)
+                                        }}>
+                                            <CgInfo />
+                                        </Button>
+                                        <Button color="danger" className="ml-1" onClick={() => {
+                                            setFilmId(e.name)
+                                            setModal(!modal)
+                                        }}>Wrong Movie?</Button>
+                                    </CardText>
                                 </CardBody>
                             </Card>
                     </motion.div>
