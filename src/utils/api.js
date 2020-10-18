@@ -20,4 +20,20 @@ const getMovieDetails = async(id, append="videos,images,credits") => {
 const getPosterImage = (path, size="original") => {
     return `https://image.tmdb.org/t/p/${size}/${path}`
 }
-export {searchMovie, getPosterImage, getMovieDetails}
+
+/**
+ * 
+ * @param {String} website 
+ * @param {*} url 
+ */
+const getVideoUrl = (website, url) => {
+    switch (website.toLowerCase()) {
+        case "youtube":
+            return `https://youtube.com/embed/${url}`
+        case "vimeo":
+            return `https://player.vimeo.com/video/${url}`
+        default:
+            break;
+    }
+}
+export {searchMovie, getPosterImage, getMovieDetails, getVideoUrl}
