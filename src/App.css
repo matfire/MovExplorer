@@ -31,9 +31,35 @@ body {
   fill:#f7f7f7;
 }
 
-.sidebar {
-  background-color: red;
-  height: 100vh;
+
+
+.sidebar__menu {
+  background-color: beige;
+  position: sticky;
+  left: 0;
+  top: 2%;
+}
+
+.sidebar__menu__category {
+  align-self: center;
+  background-color: lawngreen;
+  border-radius: 25%;
+  height: 5vh;
+  text-align: center;
+  line-height: 5vh;
+  transition-duration: .5s;
+  width: 50%;
+  cursor: pointer;
+
+}
+
+.sidebar__menu__category__icon {
+  margin-right: 2em;
+}
+
+.sidebar__menu__category:hover{
+  background-color: violet;
+  transition-duration: .5s;
 }
 
 .details__main__rating svg {
