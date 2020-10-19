@@ -8,7 +8,7 @@ db.version(1).stores({
 
 const insertMovie = async(fileName, data, fileHandle) => {
     try {
-        await db.movies.put({fileName, data, fileName})
+        await db.movies.put({fileName, data, fileHandle})
     } catch (error) {
         return false
     }

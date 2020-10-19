@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { Container } from 'reactstrap'
+import React from 'react'
+
 
 const ProfileCard = ({photo, name, role}) => {
 

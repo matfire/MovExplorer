@@ -58,7 +58,7 @@ const List = () => {
             }
         }
         search()
-    }, [query])
+    }, [query, filmId, movies, setMovies])
     useEffect(() => {
         console.log("movies have changed")
         const data = []
@@ -114,7 +114,7 @@ const List = () => {
         })
         setFilms(data)
         setLoading(false)
-    }, [movies])
+    }, [movies, history, modal])
 
     if (loading) {
         return (

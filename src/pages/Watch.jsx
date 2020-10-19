@@ -32,7 +32,7 @@ const Watch = () => {
     useEffect(() => {
         const get = async() => {
 
-            const data = movies.find((e) => e.id == id)
+            const data = movies.find((e) => String(e.id) === String(id))
             console.log(data)
             if (data) {
                 try {

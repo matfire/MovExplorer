@@ -77,9 +77,9 @@ body {
 
 .details__actor__profile img {
   border-radius: 20%;
-  min-height: 13vh;
+  min-height: 15vh;
   height: auto;
-  width: 5vw;
+  width: 15vw;
 }
 
 .details__actor__profile h4 {

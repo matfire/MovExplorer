@@ -22,7 +22,7 @@ const Header = () => {
             document.documentElement.style.setProperty("--bg", "#f7f7f7")
             if (navColor !== "light") setNavColor("light")
         }
-    }, [location])
+    }, [location, navColor])
     return (
         <header className="mb-3">
             <Navbar color={navColor} light={navColor==="light"} dark={navColor==="dark"} expand="md">
