@@ -10,6 +10,10 @@ import {GoPerson} from 'react-icons/go'
 import {ImImages} from 'react-icons/im'
 import {GrOverview} from 'react-icons/gr'
 import SidebarNavItem from '../components/SidebarNavItem'
+
+import AliceCarousel from 'react-alice-carousel';
+import 'react-alice-carousel/lib/alice-carousel.css';
+
 const Details = () => {
     const {id} = useParams()
     const [movie, setMovie] = useState({})
@@ -104,17 +108,26 @@ const Details = () => {
                         <Col size="12">
                             <h4>Images</h4>
                             <Row>
-                                {movie?.images?.backdrops.map((e) => 
-                                <Col md="4" key={e.file_path} className="mb-2">
-                                    <img src={getPosterImage(e.file_path)} className="img-fluid"/>
-                                </Col>)}
+                                <Col size="12" className="mb-2">
+                                    <AliceCarousel mouseTracking autoPlay autoPlayInterval="2000" animationDuration={1000} infinite>
+                                        {movie?.images?.backdrops.map((e) => 
+                                            <img key={e.file_path} src={getPosterImage(e.file_path)} className="img-fluid"/>
+                                        )}
+                                    </AliceCarousel>
+                                </Col>
                             </Row>
                             <Row>
-                                {movie?.images?.posters.map((e) => (
-                                    <Col md="3" key={e.file_path} className="mb-2">
-                                        <img src={getPosterImage(e.file_path)} className="img-fluid" />
-                                    </Col>
-                                ))}
+                                <Col size="12"className="mb-2">
+                                    <AliceCarousel mouseTracking autoPlay autoPlayInterval="2000" animationDuration={1000} infinite responsive={{
+                                        576: {items: 1},
+                                        768: {items: 2},
+                                        992: {items: 3}
+                                    }}>
+                                        {movie?.images?.posters.map((e) => (
+                                                <img key={e.file_path} src={getPosterImage(e.file_path)} className="img-fluid" />
+                                        ))}
+                                    </AliceCarousel>
+                                </Col>
                             </Row>
                         </Col>
                     </div>
@@ -123,7 +136,7 @@ const Details = () => {
                             <h4>Videos</h4>
                             <Row>
                                 {movie?.videos?.results.map((e) => 
-                                    <iframe key={e.site} src={getVideoUrl(e.site, e.key)} frameBorder={0} className="col col-md-4 mb-2" />
+                                    <iframe title={e.key} key={e.site} src={getVideoUrl(e.site, e.key)} frameBorder={0} className="col col-md-4 mb-2 details__video__frame" />
                                 )}
                             </Row>
                         </Col>
