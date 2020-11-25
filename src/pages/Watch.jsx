@@ -2,8 +2,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useContext } from 'react'
 import { useRef } from 'react'
-import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Col, Container, Row } from 'reactstrap'
 import { MovieContext } from '../Contexts/MoviesContext'
 
@@ -26,7 +25,7 @@ async function verifyPermission(fileHandle, readWrite) {
 
 const Watch = () => {
     const {id} = useParams()
-    const [movie, setMovie] = useState({})
+    const history = useHistory()
     const {movies} = useContext(MovieContext)
     const playerRef = useRef()
     useEffect(() => {
@@ -36,11 +35,9 @@ const Watch = () => {
             console.log(data)
             if (data) {
                 try {
-                    console.log(data.file)
                     const canPlay = await verifyPermission(data.file)
                     if (canPlay) {
                         const file = await data.file.getFile()
-                        setMovie({...data, file})
                         playerRef.current.src = URL.createObjectURL(file)
                     } else {
                         alert("Cannot be played")
@@ -48,13 +45,14 @@ const Watch = () => {
                 } catch (error) {
                     alert("Alert from Watching: " + error)
                 }
+            } else {
+                history.push("/")
             }
         }
         get()
-    }, [id, movies])
+    }, [id, movies, history])
     return (
         <Container fluid>
-            {console.log(movie)}
             <Row>
                 <Col size="6" align="center">
                     <video className="mx-auto" style={{height:"auto", width:"85%"}} autoPlay={true} ref={playerRef} controls={true}/>

@@ -11,6 +11,8 @@ import { getMovieDetails, getPosterImage, searchMovie } from '../utils/api'
 import { insertMovie } from '../utils/db'
 import { CgScreen, CgInfo } from "react-icons/cg";
 
+
+
 const List = () => {
     const { movies, setMovies } = useContext(MovieContext)
     const [films, setFilms] = useState([])
@@ -20,6 +22,69 @@ const List = () => {
     const [queryResults, setQueryResults] = useState([])
     const [loading, setLoading] = useState(true)
     const history = useHistory()
+    const [filter, setFIlter] = useState("")
+    const genFilmCol = (e) => {
+        if (!e.id) {
+            return(<Col key={e.name} md="4" sm="12" lg="2" className="mb-2 mt-2">
+                <Card style={{ cursor: "pointer" }} onClick={() => {
+                    setFilmId(e.name)
+                    setModal(!modal)
+                }}>
+                    <CardBody>
+                        <CardImg src="" />
+                        <CardTitle>{e.name}</CardTitle>
+                        <CardText className="missing-info">Could not automatically categorize this movie. Please search for it and we'll <small>definitely</small>know it for next time</CardText>
+                        <Button color="primary" onClick={() => {
+                            setFilmId(e.name)
+                            setModal(!modal)
+                        }}>Categorize it</Button>
+                    </CardBody>
+                </Card>
+            </Col>)
+        }
+        else {
+            return(
+                    <motion.div   whileHover={{ scale: 1.1 }} initial='hidden' variants={CARD_ANIMATIONS} animate='visible' key={e.id} md="4" sm="12" lg="2" className="col col-md-4 col-sm-12 col-lg-2 mb-2 mt-2">
+                        <Card  >
+                            <CardBody>
+                                <CardImg src={getPosterImage(e.poster_path)} />
+                                <CardTitle>{e.title}</CardTitle>
+                                <small>{e.name}</small>
+                                <CardText className="mt-2">
+                                    <Button color="primary" onClick={() => {
+                                        history.push(`/watch/${e.id}`)
+                                    }}>
+                                        <CgScreen />
+                                    </Button>
+                                    <Button className="ml-2" color="secondary" onClick={() => {
+                                        history.push(`/details/${e.id}`)
+                                    }}>
+                                        <CgInfo />
+                                    </Button>
+                                    <Button color="danger" className="ml-1" onClick={() => {
+                                        setFilmId(e.name)
+                                        setModal(!modal)
+                                    }}>Wrong Movie?</Button>
+                                </CardText>
+                            </CardBody>
+                        </Card>
+                </motion.div>
+            )
+        }                         
+    }
+    useEffect(() => {
+        const data = []
+        if (!filter) {
+            movies.forEach((e) => {
+                data.push(genFilmCol(e))
+            })
+        } else {
+            movies.filter((e) => e.title !== undefined).filter((a) => a.title.toLowerCase().includes(filter)).forEach((b) => {
+                data.push(genFilmCol(b))
+            })
+        }
+        setFilms(data)
+    }, [filter, genFilmCol, movies])
     useEffect(() => {
         const search = async () => {
             if (query) {
@@ -64,53 +129,7 @@ const List = () => {
         const data = []
         setLoading(true)
         movies.forEach((e) => {
-            if (!e.id) {
-                data.push(<Col key={e.name} md="4" sm="12" lg="2" className="mb-2 mt-2">
-                    <Card style={{ cursor: "pointer" }} onClick={() => {
-                        setFilmId(e.name)
-                        setModal(!modal)
-                    }}>
-                        <CardBody>
-                            <CardImg src="" />
-                            <CardTitle>{e.name}</CardTitle>
-                            <CardText className="missing-info">Could not automatically categorize this movie. Please search for it and we'll <small>definitely</small>know it for next time</CardText>
-                            <Button color="primary" onClick={() => {
-                                setFilmId(e.name)
-                                setModal(!modal)
-                            }}>Categorize it</Button>
-                        </CardBody>
-                    </Card>
-                </Col>)
-            }
-            else {
-                data.push(
-                        <motion.div   whileHover={{ scale: 1.1 }} initial='hidden' variants={CARD_ANIMATIONS} animate='visible' key={e.id} md="4" sm="12" lg="2" className="col col-md-4 col-sm-12 col-lg-2 mb-2 mt-2">
-                            <Card  >
-                                <CardBody>
-                                    <CardImg src={getPosterImage(e.poster_path)} />
-                                    <CardTitle>{e.title}</CardTitle>
-                                    <small>{e.name}</small>
-                                    <CardText className="mt-2">
-                                        <Button color="primary" onClick={() => {
-                                            history.push(`/watch/${e.id}`)
-                                        }}>
-                                            <CgScreen />
-                                        </Button>
-                                        <Button className="ml-2" color="secondary" onClick={() => {
-                                            history.push(`/details/${e.id}`)
-                                        }}>
-                                            <CgInfo />
-                                        </Button>
-                                        <Button color="danger" className="ml-1" onClick={() => {
-                                            setFilmId(e.name)
-                                            setModal(!modal)
-                                        }}>Wrong Movie?</Button>
-                                    </CardText>
-                                </CardBody>
-                            </Card>
-                    </motion.div>
-                )
-            }
+            data.push(genFilmCol(e))
         })
         setFilms(data)
         setLoading(false)
@@ -151,6 +170,11 @@ const List = () => {
                     }}>Close</Button>
                 </ModalFooter>
             </Modal>
+            <Row>
+                <Col size="8" className="mx-auto">
+                    Search <Input placeholder="Search for a movie" onChange={(e) => setFIlter(e.target.value)}/>
+                </Col>
+            </Row>
             <motion.div className="row">
                 {films}
             </motion.div>
