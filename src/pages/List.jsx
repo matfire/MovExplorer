@@ -70,19 +70,7 @@ const List = () => {
             )
         }                         
     }, [history])
-    useEffect(() => {
-        const data = []
-        if (!filter) {
-            movies.forEach((e) => {
-                data.push(genFilmCol(e))
-            })
-        } else {
-            movies.filter((e) => e.title !== undefined).filter((a) => a.title.toLowerCase().includes(filter)).forEach((b) => {
-                data.push(genFilmCol(b))
-            })
-        }
-        setFilms(data)
-    }, [filter, genFilmCol, movies])
+
     useEffect(() => {
         const search = async () => {
             if (query) {
@@ -122,26 +110,7 @@ const List = () => {
         }
         search()
     }, [query, filmId, movies, setMovies])
-    useEffect(() => {
-        console.log("movies have changed")
-        const data = []
-        setLoading(true)
-        movies.forEach((e) => {
-            data.push(genFilmCol(e))
-        })
-        setFilms(data)
-        setLoading(false)
-    }, [movies, history, modal, genFilmCol])
 
-    if (loading) {
-        return (
-            <Container fluid>
-                <div align="center">
-                    <Spinner size="lg" />
-                </div>
-            </Container>
-        )
-    }
     return (
         <Container fluid>
             <Modal size="lg" isOpen={modal} toggle={() => {
@@ -173,11 +142,16 @@ const List = () => {
                     Search <Input placeholder="Search for a movie" onChange={(e) => setFIlter(e.target.value)}/>
                 </Col>
             </Row>
-            <motion.div className="row">
-            {filter !== "" ? movies.filter((e) => e.title !== undefined).filter((a) => a.title.toLowerCase().includes(filter)).map((r) => (
+            {<motion.div className="row">
+            
+            {movies.length === 0 ? 
+            <div align="center">
+                <Spinner size="lg" />
+            </div> : 
+            filter !== "" ? movies.filter((e) => e.title !== undefined).filter((a) => a.title.toLowerCase().includes(filter)).map((r) => (
                 genFilmCol(r)
             )) : movies.map((e) => genFilmCol(e))}
-            </motion.div>
+            </motion.div>}
         </Container>
     )
 }
