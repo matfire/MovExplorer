@@ -10,6 +10,7 @@ import { CARD_ANIMATIONS } from '../utils/animations'
 import { getMovieDetails, getPosterImage, searchMovie } from '../utils/api'
 import { insertMovie } from '../utils/db'
 import { CgScreen, CgInfo } from "react-icons/cg";
+import { useCallback } from 'react'
 
 
 
@@ -23,20 +24,17 @@ const List = () => {
     const [loading, setLoading] = useState(true)
     const history = useHistory()
     const [filter, setFIlter] = useState("")
-    const genFilmCol = (e) => {
+    const genFilmCol = useCallback(e => {
         if (!e.id) {
             return(<Col key={e.name} md="4" sm="12" lg="2" className="mb-2 mt-2">
-                <Card style={{ cursor: "pointer" }} onClick={() => {
-                    setFilmId(e.name)
-                    setModal(!modal)
-                }}>
+                <Card>
                     <CardBody>
                         <CardImg src="" />
                         <CardTitle>{e.name}</CardTitle>
                         <CardText className="missing-info">Could not automatically categorize this movie. Please search for it and we'll <small>definitely</small>know it for next time</CardText>
                         <Button color="primary" onClick={() => {
                             setFilmId(e.name)
-                            setModal(!modal)
+                            setModal(m => !m)
                         }}>Categorize it</Button>
                     </CardBody>
                 </Card>
@@ -63,7 +61,7 @@ const List = () => {
                                     </Button>
                                     <Button color="danger" className="ml-1" onClick={() => {
                                         setFilmId(e.name)
-                                        setModal(!modal)
+                                        setModal(m => !m)
                                     }}>Wrong Movie?</Button>
                                 </CardText>
                             </CardBody>
@@ -71,7 +69,7 @@ const List = () => {
                 </motion.div>
             )
         }                         
-    }
+    }, [history])
     useEffect(() => {
         const data = []
         if (!filter) {
@@ -133,7 +131,7 @@ const List = () => {
         })
         setFilms(data)
         setLoading(false)
-    }, [movies, history, modal])
+    }, [movies, history, modal, genFilmCol])
 
     if (loading) {
         return (
@@ -176,7 +174,9 @@ const List = () => {
                 </Col>
             </Row>
             <motion.div className="row">
-                {films}
+            {filter !== "" ? movies.filter((e) => e.title !== undefined).filter((a) => a.title.toLowerCase().includes(filter)).map((r) => (
+                genFilmCol(r)
+            )) : movies.map((e) => genFilmCol(e))}
             </motion.div>
         </Container>
     )
