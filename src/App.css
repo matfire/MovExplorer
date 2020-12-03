@@ -34,21 +34,22 @@ body {
 
 
 .sidebar__menu {
-  background-color: beige;
+  background-color: white;
+  box-shadow: 5px 5px 5px 5px grey;
   position: sticky;
   left: 0;
   top: 2%;
+  height: 100vh;
 }
 
 .sidebar__menu__category {
   align-self: center;
-  background-color: lawngreen;
-  border-radius: 25%;
   height: 5vh;
+  margin-top: 50px;
   text-align: center;
   line-height: 5vh;
   transition-duration: .5s;
-  width: 50%;
+  width: 100%;
   cursor: pointer;
 
 }
@@ -58,7 +59,7 @@ body {
 }
 
 .sidebar__menu__category:hover{
-  background-color: violet;
+  box-shadow: 5px 5px 5px grey;
   transition-duration: .5s;
 }
 

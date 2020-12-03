@@ -47,7 +47,7 @@ const Details = () => {
     return (
         <Container fluid className="mt-2">
             <Row>
-                <Col md="4" lg="3" className="sidebar">
+                <Col md="3" lg="2" className="sidebar">
                     <div className="d-flex flex-column sidebar__menu">
                         <SidebarNavItem className="mb-2" name="Overview" icon={<GrOverview />} onClick={() => {
                             overviewRef.current.scrollIntoView({ behavior: 'smooth' })
