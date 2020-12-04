@@ -5,7 +5,7 @@ const readMoviesonDisk = async(folderHandle) => {
     const films = []
     const entries = await folderHandle.values()
     for await (const entry of entries) {
-        if (entry.kind === "file") {
+        if (entry.kind === "file" && entry.name.endsWith(".mp4")) {
             const path = await folderHandle.resolve(entry)
             const handle = await folderHandle.getFileHandle(path)
             const movie = await getMovie(entry.name)
