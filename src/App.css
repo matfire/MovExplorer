@@ -87,3 +87,7 @@ body {
   font-weight: normal;
 
 }
+
+.details__video__frame {
+  height: 300px;
+}
