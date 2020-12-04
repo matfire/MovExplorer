@@ -16,14 +16,13 @@ import { useCallback } from 'react'
 
 const List = () => {
     const { movies, setMovies } = useContext(MovieContext)
-    const [films, setFilms] = useState([])
     const [modal, setModal] = useState(false)
     const [filmId, setFilmId] = useState("")
     const [query, setQuery] = useState("")
     const [queryResults, setQueryResults] = useState([])
-    const [loading, setLoading] = useState(true)
     const history = useHistory()
     const [filter, setFIlter] = useState("")
+
     const genFilmCol = useCallback(e => {
         if (!e.id) {
             return(<Col key={e.name} md="4" sm="12" lg="2" className="mb-2 mt-2">
